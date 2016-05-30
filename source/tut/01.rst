@@ -1,0 +1,69 @@
+Create your first Landscape application I
+=========================================
+
+This is the first part of the Getting Started series.
+
+Preparations
+-------------
+
+This guid asumes that you have installed Ubuntu Linux >= 15.10 and you have PHP,
+SQLite3, and composer running.
+
+Install Webserver
+~~~~~~~~~~~~~~~~~
+
+First you will need to install a webserver, we will use Apache which is an
+open source solution that should be fine in almost any situation. To do so use
+the following commands in a terminal (you will need root rights):
+
+.. code-block:: bash
+
+  user@host:$ sudo apt update
+  user@host:$ sudo apt install apache2 libapache2-mod-php5
+
+After you have done that, you have to go to the DocumentRoot of your server, It
+will propably be ``/var/www/html``.
+
+Configure Webserver
+~~~~~~~~~~~~~~~~~~~
+
+For most webapps you want to create a ``.htaccess`` file, which contains a simple
+rule to direct all requests to your application.
+
+.. note::
+  This does still allow you to host multiple Landscape Apps by using our Router
+  component!
+
+So create this file in your DocumentRoot and make sure it contains the following
+rule:
+
+.. code-block:: bash
+
+  RewriteEngine on
+  RewriteCond %{REQUEST_URI} !index\.php$
+  RewriteRule (.*) /index.php [PT]
+
+The first line enables the rewriting engine which will perform the next two steps:
+
+#. Make sure that the requested URI is not index.php (here will live our app).
+#. Redirect to index.php (``[PT]`` makes sure that the URL in the users browser
+   will stay the same).
+
+Setup Composer
+~~~~~~~~~~~~~~
+
+The Landscape Framework uses Composer to distribute its modules. To get started,
+just use the following ``composer.json``:
+
+.. code-block:: json
+
+  {
+    "require": {
+        "landscape/landscape": ">=0.1.1"
+    }
+  }
+
+After that, just fire ``composer install`` or ``composer update`` and you are
+ready to go!
+
+In the :doc:`next part <02>` we will start writing some source code.

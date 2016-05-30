@@ -1,0 +1,51 @@
+Create your first Landscape application II
+==========================================
+
+This is the second part of the Getting Started series.
+
+Hello World and Hello Database
+-------------------------------
+
+
+Creating a simple Hello World Renderer
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+First, just create a simple ``index.php`` with the following content:
+
+.. code-block:: php
+
+  <?php namespace Landscape;
+
+    require_once('vendor/landscape/landscape.php.model/DatabaseModel.php');
+    require_once('vendor/landscape/landscape.php.router/Router.php');
+    require_once('vendor/landscape/landscape.php.template/TemplateEngine.php');
+
+    function indexRender($url, $args)
+    {
+        print("Hello World!");
+    }
+
+    //ENTRY POINT
+    $router = new Router(Array(
+
+        ['/', 'Landscape\indexRender'],
+
+    ));
+
+    $router->run($_SERVER['REQUEST_URI']);
+  ?>
+
+Now, if you go to ``localhost`` in your webbrowser you should see ``Hello World!``
+as output. You will notice that if you go to another page, like ``localhost/foo``
+that there will be no output at all, as we do not have a handler for that.
+
+Now, How does this script work?
+
+At the begining of the script (ENTRY POINT) you will see that we have created a
+router. A ``Router`` object is nothing more that an object which can call a callback
+whenever you insert an URL. But if the router does not find a match for the URL,
+it will not call any callback, so you will see nothing.
+
+Our callback is ``indexRender``. It takes two parameters, the first one contains
+the requested URL and the second one the passed arguments, but we will come to
+that later.
