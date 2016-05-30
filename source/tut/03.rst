@@ -1,0 +1,7 @@
+Create your first Landscape application III
+===========================================
+
+This is the third part of the Getting Started series.
+
+Some Templating
+----------------

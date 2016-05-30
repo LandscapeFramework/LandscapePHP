@@ -49,3 +49,51 @@ it will not call any callback, so you will see nothing.
 Our callback is ``indexRender``. It takes two parameters, the first one contains
 the requested URL and the second one the passed arguments, but we will come to
 that later.
+
+Create our Note Table
+~~~~~~~~~~~~~~~~~~~~~~
+
+If you've worked with plain PHP before, than you know that it could be a pain to
+create solid database interfaces, even if the PDO drivers simplify a lot.
+
+To create a Database in Landscape, just create a class which extends the
+abstract ``DatabaseModel`` and you are done. An examplefor our Note Table/Class
+would be the following:
+
+.. code-block:: php
+
+  class Note extends DatabaseModel
+  {
+    public $keys = ['title' => 'Landscape\TextField', 'body' => 'Landscape\TextField', 'created' => 'Landscape\TimeField'];
+  }
+
+Looks pretty easy doesn't it?
+
+So you could add more columns by simply adding more key => value pairs to the
+array. The table is altered automaticaly, so if the table misses a column it will
+be added at the next request and if it has one to much, it will be deleted.
+
+.. warning::
+  Automatic altering could lead to loss of data (columns). If you have production
+  data, always create a backup of your database file before editing a model class.
+
+To create a new row, you can use the following code:
+
+.. code-block:: php
+
+  use \DateTime;
+  $row = new Note();
+  $row->set('title', "My First Post");
+  $row->set('body', "This is a post!");
+  $row->set('created', new DateTime('now'));
+  $row->save();
+
+To load this entry, you can do the following:
+
+.. code-block:: php
+
+  $row = new Note('find', 'ID=1');
+  print($row->get('title'));
+
+Now, the next thing we need after the Database is templating, but we will work
+on this in :doc:`next part <03>` of the series.
