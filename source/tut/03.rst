@@ -5,3 +5,123 @@ This is the third part of the Getting Started series.
 
 Some Templating
 ----------------
+
+Landscape does provide a super simple way language for templating pages. You
+can predefine HTML pages which will be filled with values during runtime.
+
+To do so, you have two main makros in your templates.
+
+Insert Variables
+~~~~~~~~~~~~~~~~
+
+To use a variable in your Documents you can use the following Syntax:
+``{{ varname }}``. This can also be used with objects (``{{ var->name }}``) or
+with function calls (``{{ var->getName }}``). Theses values will be passed to
+the template engine as a context array.
+
+Calling functions
+~~~~~~~~~~~~~~~~~
+
+We provide some built-in functions for templating. The most important ones are:
+
+#. ``{% for: 'object' 'in' 'array' %}``
+#. ``{% if: 'object' %}``
+#. ``{% include: 'array' %}``
+
+All multiline calls must be closed with an ``{% end:CALL %}``.
+
+Creating an Index Page
+~~~~~~~~~~~~~~~~~~~~~~
+
+First, we need to alter our ``indexRender`` function from the last part. change
+the function to the following:
+
+.. code-block:: PHP
+
+
+  $notectrl = new Note('controler');
+  $allnotes = $notectrl->queryAll();
+
+  $context = [ 'notes' => $allnotes ];
+
+  $engine = new TemplateEngine('html/index.html', $context);
+  print($engine->renderStart());
+
+So what have we written?
+
+First, we create a controler object. This is a specialised type of a DatabaseModel
+which can not contain any data itself. Instead it can be used for query operations.
+In our example we are just querring an array of all Notes in our Database.
+
+After that, we created an array with the key ``'notes'`` and the Notes array as
+value.
+
+This will now be used to create a TemplateEngine for the template file
+``html/index.html``. The Engine can be used to render that template. If we do so
+by calling the ``renderStart`` method we get a rendered string back, which we
+want to print to the browser.
+
+Now we want to create our template document in a new folder ``html`` named
+``index.html``:
+
+.. code-block:: HTML
+
+  <html>
+    <head>
+        <title> NoteTracker </title>
+    </head>
+
+    <body>
+        <h1> All Notes </h1>
+
+        <table>
+
+        <thead>
+            <td>ID</td>
+            <td>Title</td>
+            <td>Link</td>
+        </thead>
+
+        {% for: 'note' 'in' 'notes' %}
+
+            <tr>
+                <td>{{ note->getID }}</td>
+                <td>{{ note->getTitle }}</td>
+                <td><a href="/show/{{ note->getID }}"> &gt; </a></td>
+            </tr>
+
+        {% end:for %}
+
+        </table>
+    </body>
+  </html>
+
+I will not explain HTML in this tutorial. So now we need to add three methods to
+our database class:
+
+.. code-block:: PHP
+
+    public function getTitle()
+    {
+        $temp = $this->get('title');
+        return $temp;
+    }
+
+    public function getBody()
+    {
+        $temp = $this->get('body');
+        return $temp;
+    }
+
+    public function getID()
+    {
+        $temp = $this->get('ID');
+        return $temp;
+    }
+
+You should now be able to run your app with your browser, but there should not be
+any entries in your table. You should add them manualy for now, so you can test
+if your code works. If it does, you will get a table of all Notes.
+
+You will see, that the link will change dynamicaly to the ID of the Note! In the
+:doc:`next part <04>`, we will create another template to display a note!

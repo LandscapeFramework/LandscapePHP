@@ -14,3 +14,4 @@ You can see the different parts of the guide below:
     tut/01
     tut/02
     tut/03
+    tut/04

@@ -1,0 +1,66 @@
+Create your first Landscape application IV
+===========================================
+
+This is the fourth part of the Getting Started series.
+
+Some (more) Templating
+----------------------
+
+This will be a very short part, as you should already know how to do this task:
+You can use this part to check if you understood the basic workflow when creating
+Landscape Views.
+
+Create Route
+~~~~~~~~~~~~
+
+Add the following line to your router:
+
+``['/show/{id:int}', 'Landscape\showItem'],``
+
+The only difference is that we have now specified a parameter called id of the
+type ``int``. You can also add untyped parameters. The parameter will be passed
+to the ``$args`` array of our renderer.
+
+
+Create Renderer
+~~~~~~~~~~~~~~~
+
+Our new render function will be:
+
+.. code-block:: PHP
+
+    function showItem($url, $args)
+     {
+        $context = ['note' => new Note('find', 'ID='.$a['id'])];
+        $e = new TemplateEngine('html/show.html', $context);
+        print($e->renderStart());
+     }
+
+It will use a new template but will also pass the requested Note object to
+the template renderer.
+
+The Template
+~~~~~~~~~~~~
+
+.. code-block:: HTML
+
+    <html>
+        <head>
+            <title> {{ note->getTitle }} </title>
+        </head>
+        <body>
+            <h1> Note #{{ note->getID }}</h1>
+            <h3> {{ note->getTitle }} </h3>
+            <hr>
+            <p>
+                {{ note->getBody }}
+            </p>
+        </body>
+    </head>
+
+
+Petty simple isn't it?
+If you now run your app, you will see that you can access your created Notes and
+:doc:`next part <05>`
+view their content. In the  we will take a look on how we can add a
+way for the user to add a Note via the page and not via accessing the Database.
