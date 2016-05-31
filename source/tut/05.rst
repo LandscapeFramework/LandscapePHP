@@ -5,3 +5,64 @@ This is the fifth part of the Getting Started series.
 
 User Input
 -----------
+
+To recive user input you use forms as usual. I highly suggest using POST because
+URL's get ugly very fast if you use GET.
+
+Edit Template
+~~~~~~~~~~~~~~~
+
+We should add a little form to our ``index.html``:
+
+.. code-block:: HTML
+
+    <form method="post" action="/add">
+
+        <table>
+            <tr>
+                <td><label for="title">Title</label></td>
+                <td><input type="text" name="title"></td>
+            </tr>
+            <tr>
+                <td><label for="title">Post Body</label></td>
+                <td><textarea name="body"> </textarea></td>
+            </tr>
+            <tr>
+                <td><input type="submit" value="Add"></td>
+                <td></td>
+            </tr>
+        </table>
+    </form>
+
+Backend Work
+~~~~~~~~~~~~
+
+You see that we are sending that data to a new 'page' called ``/add``, so we need
+to create a new callback for this route. Just add this line to the router:
+
+``['/add', 'Landscape\addItem'],``
+
+Now we write a simple callback:
+
+.. code-block:: PHP
+
+    function addItem($url, $args)
+    {
+        $note = new Note();
+        $note->set('title', $_POST['title']);
+        $note->set('body', $_POST['body']);
+        $note->set('created', new \DateTime('now'));
+        $note->save();
+        header("Location: /");
+    }
+
+So we add a new Note object to the database and fill in the values from the ``_POST``
+array. You should make sure that these values exist before using them, but this
+should not be an introduction to PHP/Programming.
+Even if we did't use the ``created`` field, it could simply be added to the page
+and is also usefull to filter objects.
+
+Finaly, we use the ``header`` function to request a redirect to root of the server
+which will bring the user back to the index page.
+
+Now you should be able to simply add Notes via the form.
